@@ -1,0 +1,28 @@
+.ticket-list__param {
+  margin-top: 20px;
+  font-weight: 300;
+  display: flex;
+  gap: 20px;
+  width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  &__sort {
+    &__title {
+      font-size: 12px;
+    }
+    &__select {
+      margin-top: 5px;
+      width: 150px;
+    }
+  }
+  &__filter {
+    width: 500px;
+    &__title {
+      font-size: 12px;
+    }
+    &__select {
+      margin-top: 5px;
+      width: 500px;
+    }
+  }
+}

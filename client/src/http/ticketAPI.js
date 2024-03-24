@@ -1,5 +1,7 @@
-export const fetchTicket = async () => {
-  const response = await fetch('http://localhost:5000/shopping/flight-offers')
+export const fetchTicket = async (queryParams) => {
+  const response = await fetch(
+    `http://localhost:5000/shopping/flight-offers?${queryParams}`
+  )
   return response.json()
 }
 export const fetchAirline = async (airlineCode) => {

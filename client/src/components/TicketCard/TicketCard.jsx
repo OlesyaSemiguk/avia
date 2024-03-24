@@ -101,6 +101,10 @@ const TicketCard = ({ data: ticket }) => {
         <div className="ticket-card__price">
           <div className="ticket-card__price__line"></div>
           <div className="ticket-card__price__content">
+            <div className="ticket-card__price__content__date">
+              Дата вылета{' '}
+              {ticket.itineraries[0].segments[0].departure.at.slice(0, 10)}
+            </div>
             <div className="ticket-card__price__content__available">
               Доступно мест для бронирования: {ticket.numberOfBookableSeats}
             </div>
@@ -109,7 +113,7 @@ const TicketCard = ({ data: ticket }) => {
             </div>
           </div>
         </div>
-        <div> id {ticket.id} </div>
+        {/* <div> id {ticket.id} </div> */}
       </div>
     </NavLink>
   )
