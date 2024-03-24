@@ -109,7 +109,7 @@ const TicketCard = ({ data: ticket }) => {
             </div>
           </div>
         </div>
-        {/* <div> id {ticket.id} </div> */}
+        <div> id {ticket.id} </div>
       </div>
     </NavLink>
   )

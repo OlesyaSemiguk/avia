@@ -8,11 +8,11 @@ import { Context } from '../../App'
 
 const TicketList = () => {
   const tickets = useContext(Context)
-  const [sortedTickets, setSortedTickets] = useState([...tickets])
-  const uniqueCarrierCodes = new Set()
+  const [selectedTickets, setSelectedTickets] = useState([...tickets])
+  const [sort, setSort] = useState('price')
 
   useEffect(() => {
-    setSortedTickets([...tickets])
+    setSelectedTickets([...tickets])
     const uniqueCarrierCodes = new Set()
     const fetchAirlineData = async (airlineCode) => {
       try {
@@ -41,9 +41,6 @@ const TicketList = () => {
     })
   }, [tickets])
 
-  const filter = (value) => {
-    console.log(`selected ${value}`)
-  }
   function durationTime(duration) {
     const hoursIndex = duration.indexOf('H')
     const minutesIndex = duration.indexOf('M')
@@ -57,28 +54,49 @@ const TicketList = () => {
 
     return hours * 60 + minutes
   }
-  const sort = (value) => {
+
+  const filterByTransfers = (values) => {
+    // console.log('filterByTransfers', values)
+    let filteredTickets = []
+    if (values.includes('all') || values.length === 0) {
+      filteredTickets = tickets
+    } else {
+      filteredTickets = tickets.filter((ticket) =>
+        values.includes(ticket.itineraries[0].segments.length.toString())
+      )
+    }
+    // console.log('filteredTickets', filteredTickets)
+    sortTickets(sort, filteredTickets)
+  }
+
+  const sortTickets = (value, ticketsToSort) => {
+    //console.log('sortTickets', value, ticketsToSort)
+    let sortedTickets
     if (value === 'duration') {
-      const sortedByDuration = [...tickets].sort((a, b) => {
+      sortedTickets = [...(ticketsToSort || selectedTickets)].sort((a, b) => {
         const durationA = durationTime(a.itineraries[0].duration)
         const durationB = durationTime(b.itineraries[0].duration)
         return durationA - durationB
       })
+    } else if (value === 'price') {
+      sortedTickets = [...(ticketsToSort || selectedTickets)].sort((a, b) => {
+        const priceA = a.price.total
+        const priceB = b.price.total
+        return priceA - priceB
+      })
+    }
 
-      setSortedTickets(sortedByDuration)
-    }
-    if (value === 'price') {
-      setSortedTickets([...tickets])
-    }
+    setSelectedTickets(sortedTickets)
+  }
+  const sortSelect = (value) => {
+    setSort(value)
+    sortTickets(value, selectedTickets)
   }
   return (
     <div className="ticket-list__1">
       <div className="ticket-list__param">
         <div className="ticket-list__filter">
-          <div className="ticket-list__filter__title">
-            {' '}
-            Количество пересадок
-          </div>
+          <div className="ticket-list__filter__title">Количество пересадок</div>
           <Select
             className="ticket-list__filter__select"
             mode="multiple"
@@ -88,7 +106,7 @@ const TicketList = () => {
             }}
             placeholder="Please select"
             defaultValue={['all']}
-            onChange={filter}
+            onChange={filterByTransfers}
             options={[
               {
                 value: 'all',
@@ -115,7 +133,7 @@ const TicketList = () => {
           <Select
             className="ticket-list__sort__select"
             defaultValue="price"
-            onChange={sort}
+            onChange={sortSelect}
             options={[
               {
                 value: 'duration',
@@ -130,7 +148,7 @@ const TicketList = () => {
         </div>
       </div>
       <div className="ticket-list">
-        {sortedTickets.map((ticket) => {
+        {selectedTickets.map((ticket) => {
           return <TicketCard data={ticket} key={ticket.id} />
         })}
       </div>
