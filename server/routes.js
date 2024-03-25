@@ -8,13 +8,14 @@ const amadeus = new Amadeus({
 })
 
 //полеты из originLocationCode в destinationLocationCode
-router.get('/getFlightDestinations', async (req, res) => {
+router.get('/shopping/flight-offers', async (req, res) => {
   try {
+    const { origin, destination, departureDate, adults } = req.query
     const data = await amadeus.shopping.flightOffersSearch.get({
-      originLocationCode: 'BOS',
-      destinationLocationCode: 'CHI',
-      departureDate: '2024-04-20',
-      adults: '1',
+      originLocationCode: origin,
+      destinationLocationCode: destination,
+      departureDate: departureDate,
+      adults: adults,
     })
     res.json(data)
   } catch (error) {
