@@ -1,6 +1,5 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import App from '../App'
 import TicketPage from '../page/TicketPage'
 import TicketList from '../components/TicketList/TicketList'
 

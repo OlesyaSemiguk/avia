@@ -1,17 +1,25 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Context } from '../../App'
 import { Select } from 'antd'
 import './SortFilterTicket.scss'
 const SortFilterTicket = ({
-  data: selectedTickets,
-  sortFunction: setSelectedTickets,
+  data: filterTickets,
+  sortFunction: setFilterTickets,
 }) => {
   const { tickets, isLoading } = useContext(Context)
   const [sort, setSort] = useState('price')
-  function durationTime(duration) {
+  const [filter, setFilter] = useState([])
+
+  console.log(filter, sort)
+  useEffect(() => {
+    console.log('tickets', tickets)
+    filterByTransfers(filter)
+    console.log('filterTickets SortFilterTicket', filterTickets)
+  }, [tickets])
+
+  function durationTimeNum(duration) {
     const hoursIndex = duration.indexOf('H')
     const minutesIndex = duration.indexOf('M')
-
     const hours =
       hoursIndex !== -1 ? parseInt(duration.slice(2, hoursIndex)) : 0
     const minutes =
@@ -23,41 +31,41 @@ const SortFilterTicket = ({
   }
 
   const filterByTransfers = (values) => {
-    // console.log('filterByTransfers', values)
+    setFilter(values)
     let filteredTickets = []
     if (values.length === 0) {
       filteredTickets = tickets
-    } else {
+    } else if (tickets && tickets.length) {
       filteredTickets = tickets.filter((ticket) =>
         values.includes(ticket.itineraries[0].segments.length.toString())
       )
     }
-    // console.log('filteredTickets', filteredTickets)
     sortTickets(sort, filteredTickets)
+    console.log('filteredTickets', filteredTickets)
   }
 
   const sortTickets = (value, ticketsToSort) => {
-    //console.log('sortTickets', value, ticketsToSort)
     let sortedTickets
     if (value === 'duration') {
-      sortedTickets = [...(ticketsToSort || selectedTickets)].sort((a, b) => {
-        const durationA = durationTime(a.itineraries[0].duration)
-        const durationB = durationTime(b.itineraries[0].duration)
+      sortedTickets = [...ticketsToSort]?.sort((a, b) => {
+        const durationA = durationTimeNum(a.itineraries[0].duration)
+        const durationB = durationTimeNum(b.itineraries[0].duration)
         return durationA - durationB
       })
     } else if (value === 'price') {
-      sortedTickets = [...(ticketsToSort || selectedTickets)].sort((a, b) => {
+      sortedTickets = [...ticketsToSort]?.sort((a, b) => {
         const priceA = a.price.total
         const priceB = b.price.total
         return priceA - priceB
       })
     }
-
-    setSelectedTickets(sortedTickets)
+    console.log('sortedTickets', sortedTickets)
+    setFilterTickets(sortedTickets)
   }
+
   const sortSelect = (value) => {
     setSort(value)
-    sortTickets(value, selectedTickets)
+    sortTickets(value, filterTickets)
   }
   return (
     <div>

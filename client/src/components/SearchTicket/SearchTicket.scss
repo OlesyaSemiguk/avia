@@ -1,4 +1,54 @@
 .ticket-list__search {
   display: flex;
+
   gap: 10px;
+  justify-content: start;
+  &__select-origin {
+    &__select {
+      width: 200px;
+    }
+  }
+  &__select-des {
+    &__select {
+      width: 200px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .ticket-list__search {
+    font-size: 12px;
+    flex-direction: column;
+    font-weight: 300;
+    &__select-origin {
+      &__select {
+        width: 100%;
+      }
+      &::before {
+        content: 'Откуда';
+        color: black;
+      }
+    }
+    &__select-des {
+      &__select {
+        width: 100%;
+      }
+      &::before {
+        content: 'Куда';
+        color: black;
+      }
+    }
+    &__icon {
+      display: none;
+    }
+    &__input {
+      &::before {
+        content: 'Количество пассажиров';
+        color: black;
+      }
+      &__input {
+        width: 100%;
+      }
+    }
+  }
 }

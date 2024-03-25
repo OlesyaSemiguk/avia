@@ -3,7 +3,6 @@
   font-weight: 300;
   display: flex;
   gap: 20px;
-  width: 1000px;
   margin-left: auto;
   margin-right: auto;
   &__sort {
@@ -23,6 +22,25 @@
     &__select {
       margin-top: 5px;
       width: 500px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .ticket-list__param {
+    flex-direction: column;
+    gap: 10px;
+    &__sort {
+      &__select {
+        width: 300px;
+      }
+    }
+    &__filter {
+      width: 300px;
+
+      &__select {
+        width: 500px;
+      }
     }
   }
 }

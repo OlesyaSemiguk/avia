@@ -1,84 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import './TicketCard.scss'
-import { fetchAirline } from '../../http/ticketAPI'
 import { NavLink } from 'react-router-dom'
-import TicketPage from '../../page/TicketPage'
+import FlightOverview from '../FlightOverview/FlightOverview'
+import durationTimeString from '../../utils/formattingHelpers'
+import { transfer } from '../../utils/dictionary'
 const TicketCard = ({ data: ticket }) => {
   const [countTransfer, setCountTransfer] = useState()
-
-  const transfer = {
-    1: 'пересадка',
-    2: 'пересадки',
-    3: 'пересадки',
-    4: 'пересадки',
-    5: 'пересадок',
-  }
-  function formatTime(date) {
-    const hours = String(date.getHours()).padStart(2, '0')
-    const minutes = String(date.getMinutes()).padStart(2, '0')
-    return `${hours}:${minutes}`
-  }
-  function durationTime(time) {
-    const hoursIndex = time.indexOf('H')
-    const minutesIndex = time.indexOf('M')
-    const hours = time.slice(2, hoursIndex)
-    const minutes = time.slice(hoursIndex + 1, minutesIndex)
-    return `${hours}ч ${minutes}мин`
-  }
-  function capitalizeFirstLetter(str) {
-    return str
-      ? str.toLowerCase().replace(/(?:^|\s)\w/g, function (match) {
-          return match.toUpperCase()
-        })
-      : ''
-  }
 
   useEffect(() => {
     setCountTransfer(ticket.itineraries[0].segments.length - 1)
   }, [ticket])
-  //console.log(ticket)
+
   return (
     <NavLink to={'/ticket/' + ticket.id}>
       <div className="ticket-card">
         <div className="ticket-card__flight">
           <div className="ticket-card__flight__overview">
             {ticket.itineraries[0].segments.map((segment, index) => {
-              const departureTime = new Date(segment.departure.at)
-              const arrivalTime = new Date(segment.arrival.at)
-              return (
-                <div className="ticket-card__flight__segment" key={segment.id}>
-                  <div className="ticket-card__flight__details">
-                    <div className="ticket-card__flight__details__item">
-                      <div className="ticket-card__flight__details__item__airport">
-                        {segment.departure.iataCode}
-                      </div>
-                      <div className="ticket-card__flight__details__item__time">
-                        {formatTime(departureTime)}
-                      </div>
-                    </div>
-                    <div className="ticket-card__flight__details__item">
-                      <div className="ticket-card__flight__details__item__airport">
-                        {segment.arrival.iataCode}
-                      </div>
-                      <div className="ticket-card__flight__details__item__time">
-                        {formatTime(arrivalTime)}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="ticket-card__flight__segment__line"></div>
-                  <div className="ticket-card__flight__segment__about">
-                    <div className="ticket-card__flight__segment__about__time">
-                      {durationTime(segment.duration)}
-                    </div>
-                    <div className="ticket-card__flight__segment__about__airline">
-                      {localStorage.getItem(segment.carrierCode) &&
-                        capitalizeFirstLetter(
-                          localStorage.getItem(segment.carrierCode)
-                        )}
-                    </div>
-                  </div>
-                </div>
-              )
+              return <FlightOverview segment={segment} key={segment.id} />
             })}
           </div>
           {countTransfer ? (
@@ -89,7 +28,7 @@ const TicketCard = ({ data: ticket }) => {
               <div className="ticket-card__flight__total__time">
                 Общее время перелета{' '}
                 <span className="ticket-card__flight__total__time__number">
-                  {durationTime(ticket.itineraries[0].duration)}
+                  {durationTimeString(ticket.itineraries[0].duration)}
                 </span>
               </div>
             </div>
@@ -113,7 +52,6 @@ const TicketCard = ({ data: ticket }) => {
             </div>
           </div>
         </div>
-        {/* <div> id {ticket.id} </div> */}
       </div>
     </NavLink>
   )

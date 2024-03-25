@@ -11,7 +11,6 @@ export const fetchAirline = async (airlineCode) => {
     )
 
     const result = await resultPromise.json()
-    console.log('result', result)
     return result.data[0].businessName
   } catch (error) {
     console.error('Error fetching data:', error)

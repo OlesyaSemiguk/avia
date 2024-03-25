@@ -1,9 +1,9 @@
 import { BrowserRouter } from 'react-router-dom'
-import TicketList from './components/TicketList/TicketList'
 import './main.scss'
 import AppRouter from './routing/AppRouter'
 import { createContext, useEffect, useState, useRef } from 'react'
 import { fetchTicket } from './http/ticketAPI'
+import { ConfigProvider } from 'antd'
 
 export const Context = createContext()
 
@@ -17,11 +17,10 @@ function App() {
   })
   const [isLoading, setIsLoading] = useState(true)
   const fetchInProgress = useRef(false)
-
+  // useEffect(() => {
+  //   localStorage.clear()
+  // }, [])
   useEffect(() => {
-    console.log('seart', searchParams)
-    console.log('effect')
-
     // Если запрос уже выполняется, не делаем новый запрос
     if (fetchInProgress.current) return
 
@@ -30,11 +29,9 @@ function App() {
     fetchInProgress.current = true
 
     const fetchData = async () => {
-      console.log('fetching data')
       try {
         const data = await fetchTicket(queryParams)
         setTickets(data.data)
-        console.log('tickets', tickets)
         setIsLoading(false)
       } catch (error) {
         setTickets([])
@@ -45,10 +42,6 @@ function App() {
     }
 
     fetchData()
-
-    return () => {
-      console.log('return effect')
-    }
   }, [searchParams])
 
   return (
@@ -62,7 +55,16 @@ function App() {
           isLoading,
         }}
       >
-        <AppRouter />
+        <ConfigProvider
+          theme={{
+            token: {
+              colorPrimary: '#3061c2',
+              /* here is your global tokens */
+            },
+          }}
+        >
+          <AppRouter />
+        </ConfigProvider>
       </Context.Provider>
     </BrowserRouter>
   )

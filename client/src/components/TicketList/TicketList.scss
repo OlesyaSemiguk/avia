@@ -2,7 +2,8 @@
   display: flex;
   flex-direction: column;
   width: 1000px;
-  padding: 20px;
+  padding-top: 20px;
+  box-sizing: content-box;
   margin-left: auto;
   margin-right: auto;
   &__count {
@@ -27,5 +28,32 @@
     gap: 20px;
     width: 1000px;
     margin-top: 10px;
+  }
+}
+
+@media (max-width: 1366px) {
+  .ticket-list {
+    width: 960px;
+    &__tickets {
+      width: 960px;
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .ticket-list {
+    width: 750px;
+    &__tickets {
+      width: 750px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .ticket-list {
+    width: 300px;
+    &__tickets {
+      width: 300px;
+    }
   }
 }
